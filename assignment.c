@@ -1,5 +1,33 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+
+void queueInsert(int* queue, int* end, int num)
+{
+    queue[*end] = num;
+    ++(*end);
+}
+
+void queuePushFront(int* queue, int* end, int num)
+{
+    ++(*end);
+    for (int i = *end - 1; i > 0; --i)
+        queue[i] = queue[i - 1];
+    queue[0] = num;
+}
+
+int queueTop(int* queue, int* end)
+{
+    if (*end > 0)
+    {
+        int num = queue[0];
+        for (int i = 0; i < *end - 1; ++i)
+            queue[i] = queue[i + 1];
+        --(*end);
+        return num;
+    }
+    return -1;
+}
 
 void SRTF(int* arrivalTime, int* burstTime, int* priorityLevel, int _numOfProcesseses)
 {
@@ -33,7 +61,9 @@ void SRTF(int* arrivalTime, int* burstTime, int* priorityLevel, int _numOfProces
 
 void RRAlgorithm(int* _arrivalTime, int* _burstTime, int* _priorityLevel, int _numOfProcesses)
 {
-    int timeQuantum = 0, remainingProcesses = _numOfProcesses, waitTime[200] = { 0 }, remainBurstTime[200] = { 0 };
+    int timeQuantum = 0, remainingProcesses = _numOfProcesses, end = 0, index = 0, time = 0,
+        waitTime[200] = { 0 }, remainBurstTime[200] = { 0 }, queue[200] = { 0 }, arrivalflag[200] = { 0 };
+
     float maxTurnaroundTime = 0.0f, avgTurnaroundTime = 0.0f, maxWaitingTime = 0.0f, avgWaitingTime = 0.0f;
 
     printf("Please enter Time Quantum: ");
@@ -42,36 +72,43 @@ void RRAlgorithm(int* _arrivalTime, int* _burstTime, int* _priorityLevel, int _n
     for (int i = 0; i < _numOfProcesses; ++i)
         remainBurstTime[i] = _burstTime[i];
 
-    for (int i = 0, time = 0; remainingProcesses != 0;)
-    {
-        if (_arrivalTime[i] <= time)
-        {
-            if (remainBurstTime[i] == 0)
-                ++i;
-            else if (remainBurstTime[i] <= timeQuantum)
-            {
-                time += remainBurstTime[i];
-                remainBurstTime[i] = 0;
-                waitTime[i] = time - _burstTime[i];
-                --remainingProcesses;
-                ++i;
-            }
-            else if (remainBurstTime[i] > timeQuantum)
-            {
-                remainBurstTime[i] -= timeQuantum;
-                time += timeQuantum;
-                ++i;
-            }
+    queueInsert(queue, &end, 0);
+    arrivalflag[0] = 1;
 
-            if (i >= _numOfProcesses)
-                i = 0;
-        }
-        else
+    while (remainingProcesses != 0)
+    {
+        index = queueTop(queue, &end);
+
+        if (index > -1 && remainBurstTime[index] <= timeQuantum)
         {
-            --i;
-            //check if i is out of bound and if remaining burst time is 0
-            if (i > -1 && remainBurstTime[i] == 0)
-                ++time;
+            time += remainBurstTime[index];
+            remainBurstTime[index] = 0;
+            waitTime[index] = time - _arrivalTime[index] - _burstTime[index];
+            --remainingProcesses;
+        }
+        else if(index > -1 && remainBurstTime[index] > timeQuantum)
+        {
+            remainBurstTime[index] -= timeQuantum;
+            time += timeQuantum;
+        }
+
+        for (int i = 0; i < _numOfProcesses; ++i)
+        {
+            if (arrivalflag[i] == 0 && _arrivalTime[i] <= time)
+            {
+                queueInsert(queue, &end, i);
+                arrivalflag[i] = 1;
+            }
+        }
+
+        if (index > -1 && remainBurstTime[index] != 0)
+        {
+            queueInsert(queue, &end, index);
+        }
+
+        if (end <= 0)
+        {
+            ++time;
         }
     }
 
@@ -92,7 +129,9 @@ void RRAlgorithm(int* _arrivalTime, int* _burstTime, int* _priorityLevel, int _n
 
 void RRRF(int* _arrivalTime, int* _burstTime, int* _priorityLevel, int _numOfProcesses)
 {
-    int timeQuantum = 0, remainingProcesses = _numOfProcesses, pivotPoint = -1, waitTime[200] = { 0 }, remainBurstTime[200] = { 0 };
+    int timeQuantum = 0, remainingProcesses = _numOfProcesses, end = 0, index = 0, time = 0, pivotPoint = -1,
+        waitTime[200] = { 0 }, remainBurstTime[200] = { 0 }, queue[200] = { 0 }, arrivalflag[200] = { 0 };
+
     float maxTurnaroundTime = 0.0f, avgTurnaroundTime = 0.0f, maxWaitingTime = 0.0f, avgWaitingTime = 0.0f;
 
     printf("Please enter Time Quantum: ");
@@ -101,43 +140,52 @@ void RRRF(int* _arrivalTime, int* _burstTime, int* _priorityLevel, int _numOfPro
     for (int i = 0; i < _numOfProcesses; ++i)
         remainBurstTime[i] = _burstTime[i];
 
-    for (int i = 0, time = 0; remainingProcesses != 0;)
+    queueInsert(queue, &end, 0);
+    arrivalflag[0] = 1;
+
+    while (remainingProcesses != 0)
     {
-        if (_arrivalTime[i] <= time)
+
+        index = queueTop(queue, &end);
+
+        if (index > -1 && remainBurstTime[index] <= timeQuantum)
         {
-            if (remainBurstTime[i] == 0)
-                ++i;
-            else if (remainBurstTime[i] <= timeQuantum)
-            {
-                time += remainBurstTime[i];
-                remainBurstTime[i] = 0;
-                waitTime[i] = time - _burstTime[i];
-                --remainingProcesses;
-                ++i;
-            }
-            else if (remainBurstTime[i] > timeQuantum)
-            {
-                remainBurstTime[i] -= timeQuantum;
-                time += timeQuantum;
-                pivotPoint = i;
-                ++i;
-            }
-
-            if (pivotPoint > -1 && i < _numOfProcesses && remainBurstTime[pivotPoint] <= remainBurstTime[i])
-            {
-                i = pivotPoint;
-                pivotPoint = -1;
-            }
-
-            if (i >= _numOfProcesses)
-                i = 0;
+            time += remainBurstTime[index];
+            remainBurstTime[index] = 0;
+            waitTime[index] = time - _arrivalTime[index] - _burstTime[index];
+            --remainingProcesses;
         }
-        else
+        else if (index > -1 && remainBurstTime[index] > timeQuantum)
         {
-            --i;
-            //check if i is out of bound and if remaining burst time is 0
-            if (i > -1 && remainBurstTime[i] == 0)
-                ++time;
+            remainBurstTime[index] -= timeQuantum;
+            time += timeQuantum;
+            pivotPoint = index;
+        }
+
+        for (int i = 0; i < _numOfProcesses; ++i)
+        {
+            if (arrivalflag[i] == 0 && _arrivalTime[i] <= time)
+            {
+                queueInsert(queue, &end, i);
+                arrivalflag[i] = 1;
+            }
+        }
+
+        if (pivotPoint > -1 && remainBurstTime[pivotPoint] <= remainBurstTime[queue[0]])
+        {
+            queuePushFront(queue, &end, pivotPoint);
+            pivotPoint = -1;
+            continue;
+        }
+
+        if (index > -1 && remainBurstTime[index] != 0)
+        {
+            queueInsert(queue, &end, index);
+        }
+
+        if (end <= 0)
+        {
+            ++time;
         }
     }
 
@@ -156,24 +204,21 @@ void RRRF(int* _arrivalTime, int* _burstTime, int* _priorityLevel, int _numOfPro
     printf("maximum waiting time: %.2f\n", maxWaitingTime);
 }
 
-FILE* fileOpen()
+FILE* fileOpen(char** argv)
 {
 	FILE* filepath;
-	char filename[200] = "";
-	printf("Please enter the Full Path of the file: \n");
-	scanf("%s", filename);
-	filepath = fopen(filename, "r");
+	filepath = fopen(argv[1], "r");
 	if (filepath == NULL)
 	{
-		printf("%s " "File not found.", filename);
+		printf("%s " "File not found.", argv[1]);
 		exit(EXIT_FAILURE);
 	}
     return filepath;
 }
 
-int main()
+int main(int argc, char** argv)
 {
-    FILE* file = fileOpen();
+    FILE* file = fileOpen(argv);
 
     int arrivalTime[200], burstTime[200], priorityLevel[200], numOfProcesses = 0;
     int i = 0;
@@ -187,7 +232,7 @@ int main()
    
     RRAlgorithm(arrivalTime, burstTime, priorityLevel, numOfProcesses);
     RRRF(arrivalTime, burstTime, priorityLevel, numOfProcesses);
-    SRTF(arrivalTime, burstTime, priorityLevel, numOfProcesses);
+    //SRTF(arrivalTime, burstTime, priorityLevel, numOfProcesses);
 
     return 0;
 }
