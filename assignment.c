@@ -1,183 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-//void FakeRR1() //Sauce: https://www.javatpoint.com/round-robin-program-in-c
-//{
-//    // initlialize the variable name  
-//    int i, NOP, sum = 0, count = 0, y, quant, wt = 0, tat = 0, at[10], bt[10], temp[10];
-//    float avg_wt, avg_tat;
-//    printf(" Total number of process in the system: ");
-//    scanf("%d", &NOP);
-//    y = NOP; // Assign the number of process to variable y  
-//
-//// Use for loop to enter the details of the process like Arrival time and the Burst Time  
-//    for (i = 0; i < NOP; i++)
-//    {
-//        printf("\n Enter the Arrival and Burst time of the Process[%d]\n", i + 1);
-//        printf(" Arrival time is: \t");  // Accept arrival time  
-//        scanf("%d", &at[i]);
-//        printf(" \nBurst time is: \t"); // Accept the Burst time  
-//        scanf("%d", &bt[i]);
-//        temp[i] = bt[i]; // store the burst time in temp array  
-//    }
-//    // Accept the Time qunat  
-//    printf("Enter the Time Quantum for the process: \t");
-//    scanf("%d", &quant);
-//    // Display the process No, burst time, Turn Around Time and the waiting time  
-//    printf("\n Process No \t\t Burst Time \t\t TAT \t\t Waiting Time ");
-//    for (sum = 0, i = 0; y != 0; )
-//    {
-//        if (temp[i] <= quant && temp[i] > 0) // define the conditions   
-//        {
-//            sum = sum + temp[i];
-//            temp[i] = 0;
-//            count = 1;
-//        }
-//        else if (temp[i] > 0)
-//        {
-//            temp[i] = temp[i] - quant;
-//            sum = sum + quant;
-//        }
-//        if (temp[i] == 0 && count == 1)
-//        {
-//            y--; //decrement the process no.  
-//            printf("\nProcess No[%d] \t\t %d\t\t\t\t %d\t\t\t %d", i + 1, bt[i], sum - at[i], sum - at[i] - bt[i]);
-//            wt = wt + sum - at[i] - bt[i];
-//            tat = tat + sum - at[i];
-//            count = 0;
-//        }
-//        if (i == NOP - 1)
-//        {
-//            i = 0;
-//        }
-//        else if (at[i + 1] <= sum)
-//        {
-//            i++;
-//        }
-//        else
-//        {
-//            i = 0;
-//        }
-//    }
-//    // represents the average waiting time and Turn Around time  
-//    avg_wt = wt * 1.0 / NOP;
-//    avg_tat = tat * 1.0 / NOP;
-//    printf("\n Average Turn Around Time: \t%f", avg_wt);
-//    printf("\n Average Waiting Time: \t%f", avg_tat);
-//    getch();
-//
-//}
-//
-//void FakeRR2() //Sauce: https://www.edureka.co/blog/round-robin-scheduling-in-c/
-//{
-//    int i, limit, total = 0, x, counter = 0, time_quantum;
-//    int wait_time = 0, turnaround_time = 0, arrival_time[10], burst_time[10], temp[10];
-//    float average_wait_time, average_turnaround_time;
-//    printf("nEnter Total Number of Processes:t");
-//    scanf("%d", &limit);
-//    x = limit;
-//    for (i = 0; i < limit; i++)
-//    {
-//        printf("nEnter Details of Process[%d]n", i + 1);
-//
-//        printf("Arrival Time:t");
-//
-//        scanf("%d", &arrival_time[i]);
-//
-//        printf("Burst Time:t");
-//
-//        scanf("%d", &burst_time[i]);
-//
-//        temp[i] = burst_time[i];
-//    }
-//
-//    printf("nEnter Time Quantum:t");
-//    scanf("%d", &time_quantum);
-//    printf("nProcess IDttBurst Timet Turnaround Timet Waiting Timen");
-//    for (total = 0, i = 0; x != 0;)
-//    {
-//        if (temp[i] <= time_quantum && temp[i] > 0)
-//        {
-//            total = total + temp[i];
-//            temp[i] = 0;
-//            counter = 1;
-//        }
-//        else if (temp[i] > 0)
-//        {
-//            temp[i] = temp[i] - time_quantum;
-//            total = total + time_quantum;
-//        }
-//        if (temp[i] == 0 && counter == 1)
-//        {
-//            x--;
-//            printf("nProcess[%d]tt%dtt %dttt %d", i + 1, burst_time[i], total - arrival_time[i], total - arrival_time[i] - burst_time[i]);
-//            wait_time = wait_time + total - arrival_time[i] - burst_time[i];
-//            turnaround_time = turnaround_time + total - arrival_time[i];
-//            counter = 0;
-//        }
-//        if (i == limit - 1)
-//        {
-//            i = 0;
-//        }
-//        else if (arrival_time[i + 1] <= total)
-//        {
-//            i++;
-//        }
-//        else
-//        {
-//            i = 0;
-//        }
-//    }
-//
-//    average_wait_time = wait_time * 1.0 / limit;
-//    average_turnaround_time = turnaround_time * 1.0 / limit;
-//    printf("nnAverage Waiting Time:t%f", average_wait_time);
-//    printf("nAvg Turnaround Time:t%fn", average_turnaround_time);
-//    return 0;
-//
-//}
 
-void FakeSRTF()
+void SRTF(int* arrivalTime, int* burstTime, int* priorityLevel, int _numOfProcesseses)
 {
-    int a[10], b[10], x[10], i, smallest, count = 0, time, n;
-    double avg = 0, tt = 0, end;
-    printf("enter the number of Processes:\n");
-    scanf_s("%d", &n);
-    printf("enter arrival time\n");
-    for (i = 0; i < n; i++)
-        scanf_s("%d", &a[i]);
-    printf("enter burst time\n");
-    for (i = 0; i < n; i++)
-        scanf_s("%d", &b[i]);
-    for (i = 0; i < n; i++)
-        x[i] = b[i];
-
-    b[9] = 9999;
-
-    for (time = 0; count != n; time++)
-    {
-        smallest = 9;
-        for (i = 0; i < n; i++)
-        {
-            if (a[i] <= time && b[i] < b[smallest] && b[i]>0)
-                smallest = i;
-        }
-        b[smallest]--;
-        if (b[smallest] == 0)
-        {
-            count++;
-            end = (double)time + 1;
-            avg = avg + end - a[smallest] - x[smallest];
-            tt = tt + end - a[smallest];
-        }
-    }
-    printf("\n\nAverage waiting time = %lf\n", avg / n);
-    printf("Average Turnaround time = %lf", tt / n);
-    //return 0;
-}
-
-void SRTF(int* arrivalTime, int* burstTime, int* priorityLevel)
-{
-    int temp[100], time, count = 0, shortest, numofProcesses = 0;
+    int temp[200] = { 0 }, time, count = 0, shortest, numofProcesses = _numOfProcesseses;
     double turnaboutTime = 0.0, avgWaitingTime = 0.0, end;
     for (int i = 0; burstTime[i] != '0'; ++i)
     {
@@ -202,16 +28,141 @@ void SRTF(int* arrivalTime, int* burstTime, int* priorityLevel)
         }
     }
     printf("\n\nAverage waiting time = %lf\n", avgWaitingTime / numofProcesses);
-    printf("Average Turnaround time = %lf", turnaboutTime / numofProcesses);
+    printf("Average Turnaround time = %lf\n", turnaboutTime / numofProcesses);
+}
+
+void RRAlgorithm(int* _arrivalTime, int* _burstTime, int* _priorityLevel, int _numOfProcesses)
+{
+    int timeQuantum = 0, remainingProcesses = _numOfProcesses, waitTime[200] = { 0 }, remainBurstTime[200] = { 0 };
+    float maxTurnaroundTime = 0.0f, avgTurnaroundTime = 0.0f, maxWaitingTime = 0.0f, avgWaitingTime = 0.0f;
+
+    printf("Please enter Time Quantum: ");
+    scanf("%d", &timeQuantum);
+
+    for (int i = 0; i < _numOfProcesses; ++i)
+        remainBurstTime[i] = _burstTime[i];
+
+    for (int i = 0, time = 0; remainingProcesses != 0;)
+    {
+        if (_arrivalTime[i] <= time)
+        {
+            if (remainBurstTime[i] == 0)
+                ++i;
+            else if (remainBurstTime[i] <= timeQuantum)
+            {
+                time += remainBurstTime[i];
+                remainBurstTime[i] = 0;
+                waitTime[i] = time - _burstTime[i];
+                --remainingProcesses;
+                ++i;
+            }
+            else if (remainBurstTime[i] > timeQuantum)
+            {
+                remainBurstTime[i] -= timeQuantum;
+                time += timeQuantum;
+                ++i;
+            }
+
+            if (i >= _numOfProcesses)
+                i = 0;
+        }
+        else
+        {
+            --i;
+            //check if i is out of bound and if remaining burst time is 0
+            if (i > -1 && remainBurstTime[i] == 0)
+                ++time;
+        }
+    }
+
+    for (int i = 0; i < _numOfProcesses; ++i)
+    {
+        maxWaitingTime += waitTime[i];
+        maxTurnaroundTime += _burstTime[i] + waitTime[i];
+    }
+
+    avgWaitingTime = maxWaitingTime / _numOfProcesses;
+    avgTurnaroundTime = maxTurnaroundTime / _numOfProcesses;
+
+    printf("average turnaround time: %.2f\n", avgTurnaroundTime);
+    printf("maximum turnaround time: %.2f\n", maxTurnaroundTime);
+    printf("average waiting time: %.2f\n", avgWaitingTime);
+    printf("maximum waiting time: %.2f\n", maxWaitingTime);
+}
+
+void RRRF(int* _arrivalTime, int* _burstTime, int* _priorityLevel, int _numOfProcesses)
+{
+    int timeQuantum = 0, remainingProcesses = _numOfProcesses, pivotPoint = -1, waitTime[200] = { 0 }, remainBurstTime[200] = { 0 };
+    float maxTurnaroundTime = 0.0f, avgTurnaroundTime = 0.0f, maxWaitingTime = 0.0f, avgWaitingTime = 0.0f;
+
+    printf("Please enter Time Quantum: ");
+    scanf("%d", &timeQuantum);
+
+    for (int i = 0; i < _numOfProcesses; ++i)
+        remainBurstTime[i] = _burstTime[i];
+
+    for (int i = 0, time = 0; remainingProcesses != 0;)
+    {
+        if (_arrivalTime[i] <= time)
+        {
+            if (remainBurstTime[i] == 0)
+                ++i;
+            else if (remainBurstTime[i] <= timeQuantum)
+            {
+                time += remainBurstTime[i];
+                remainBurstTime[i] = 0;
+                waitTime[i] = time - _burstTime[i];
+                --remainingProcesses;
+                ++i;
+            }
+            else if (remainBurstTime[i] > timeQuantum)
+            {
+                remainBurstTime[i] -= timeQuantum;
+                time += timeQuantum;
+                pivotPoint = i;
+                ++i;
+            }
+
+            if (pivotPoint > -1 && i < _numOfProcesses && remainBurstTime[pivotPoint] <= remainBurstTime[i])
+            {
+                i = pivotPoint;
+                pivotPoint = -1;
+            }
+
+            if (i >= _numOfProcesses)
+                i = 0;
+        }
+        else
+        {
+            --i;
+            //check if i is out of bound and if remaining burst time is 0
+            if (i > -1 && remainBurstTime[i] == 0)
+                ++time;
+        }
+    }
+
+    for (int i = 0; i < _numOfProcesses; ++i)
+    {
+        maxWaitingTime += waitTime[i];
+        maxTurnaroundTime += _burstTime[i] + waitTime[i];
+    }
+
+    avgWaitingTime = maxWaitingTime / _numOfProcesses;
+    avgTurnaroundTime = maxTurnaroundTime / _numOfProcesses;
+
+    printf("average turnaround time: %.2f\n", avgTurnaroundTime);
+    printf("maximum turnaround time: %.2f\n", maxTurnaroundTime);
+    printf("average waiting time: %.2f\n", avgWaitingTime);
+    printf("maximum waiting time: %.2f\n", maxWaitingTime);
 }
 
 FILE* fileOpen()
 {
 	FILE* filepath;
-	char filename[100] = "";
+	char filename[200] = "";
 	printf("Please enter the Full Path of the file: \n");
-	scanf_s("%s", &filename, (unsigned int)sizeof(filename));
-	errno_t err = fopen_s(&filepath, filename, "r");
+	scanf("%s", filename);
+	filepath = fopen(filename, "r");
 	if (filepath == NULL)
 	{
 		printf("%s " "File not found.", filename);
@@ -224,21 +175,19 @@ int main()
 {
     FILE* file = fileOpen();
 
-    int arrival_time[100], burst_time[100], priority_level[100];
+    int arrivalTime[200], burstTime[200], priorityLevel[200], numOfProcesses = 0;
     int i = 0;
-    while (fscanf_s(file, "%d %d %d", &arrival_time[i], &burst_time[i], &priority_level[i]) != EOF)
+    while (fscanf(file, "%d %d %d", &arrivalTime[i], &burstTime[i], &priorityLevel[i]) != EOF)
     {
         ++i;
     }
     fclose(file);
-    arrival_time[i] = burst_time[i] = priority_level[i] = '0';
-   /* for (i = 0; arrival_time[i] != '0'; i++)
-        printf("%d\n", arrival_time[i]);
-    for (i = 0; burst_time[i] != '0'; i++)
-        printf("%d\n", burst_time[i]);
-    for (i = 0; priority_level[i] != '0'; i++)
-        printf("%d\n", priority_level[i]);*/
+    arrivalTime[i] = burstTime[i] = priorityLevel[i] = '0';
+    numOfProcesses = i;
+   
+    RRAlgorithm(arrivalTime, burstTime, priorityLevel, numOfProcesses);
+    RRRF(arrivalTime, burstTime, priorityLevel, numOfProcesses);
+    SRTF(arrivalTime, burstTime, priorityLevel, numOfProcesses);
 
-    SRTF(arrival_time, burst_time, priority_level);
     return 0;
 }
